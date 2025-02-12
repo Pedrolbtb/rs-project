@@ -26,7 +26,7 @@ export async function GET(request) {
       return new Response(JSON.stringify(ordersData.orders || ordersData), { status: 200 });
   
     } catch (error) {
-      console.log("ultimo log porra", error.message); 
+      console.log("ultimo log", error.message); 
       return new Response(JSON.stringify({ error: error.message }), { status: 500 });
     }
   }
