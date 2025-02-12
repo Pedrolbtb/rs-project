@@ -11,8 +11,10 @@
   "dependencies": {
     "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
+    "critters": "^0.0.23",
     "mongodb": "^6.13.0",
     "mongoose": "^8.10.0",
+    "mongose": "^0.0.2-security",
     "next": "15.1.7",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

@@ -25,7 +25,7 @@ export async function POST(request) {
         return NextResponse.json({ 
             success: true, 
             message: "Login feito com sucesso", 
-            _id: userExistence._id.toString()  // Converte o ID para string
+            _id: userExistence._id.toString() 
         }, { status: 200 });
 
     } catch (err) {
