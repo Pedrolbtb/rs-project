@@ -2,9 +2,10 @@ export async function GET(request) {
     try {
       // Obter token
       const tokenResponse = await fetch(`${process.env.NEXTAUTH_URL}/api/getToken`);
-      if (!tokenResponse.ok) throw new Error('Falha ao obter token');
-      const { access_token, token_type } = await tokenResponse.json();
-  
+      if (!tokenResponse.ok) throw new Error('Falha ao obter token (Orders)');
+      console.log("Ponto de verificação 1: Token obtido"); 
+      const { accessToken, tokenType } = await tokenResponse.json();
+      
       // Extrair parâmetros da URL
       const { searchParams } = new URL(request.url);
       const initialUpdatedAt = searchParams.get('initialUpdatedAt');
@@ -13,7 +14,7 @@ export async function GET(request) {
       // Buscar pedidos
       const ordersResponse = await fetch(
         `https://integration.plataformaseru.com.br/v1/orders?initialUpdatedAt=${initialUpdatedAt}&finalUpdatedAt=${finalUpdatedAt}`,
-        { headers: { Authorization: `${token_type} ${access_token}` } }
+        { headers: { Authorization: `${tokenType} ${accessToken}` } }
       );
   
       if (!ordersResponse.ok) {
@@ -25,6 +26,7 @@ export async function GET(request) {
       return new Response(JSON.stringify(ordersData.orders || ordersData), { status: 200 });
   
     } catch (error) {
+      console.log("ultimo log porra", error.message); 
       return new Response(JSON.stringify({ error: error.message }), { status: 500 });
     }
   }

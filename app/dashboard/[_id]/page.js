@@ -9,33 +9,33 @@ export default function OrdersComponent() {
     const [tokenData, setTokenData] = useState(null);
     const params = useParams();
 
-    // const getAccessToken = async () => {
-    //     try {
-    //         const response = await axios.post('/api/getToken');
-    //         const data = response.data;
-    //         console.log('error', data)
-    //         const tokenInfo = {
-    //             accessToken: data.accessToken,
-    //             tokenType: data.tokenType || 'Bearer',
-    //             expiresIn: data.expiresIn
-    //         };
-    //         setTokenData(tokenInfo);
-    //         return tokenInfo;
+    const getAccessToken = async () => {
+        try {
+            const response = await axios.post('/api/getToken');
+            const data = response.data;
+            console.log('error', data)
+            const tokenInfo = {
+                accessToken: data.accessToken,
+                tokenType: data.tokenType || 'Bearer',
+                expiresIn: data.expiresIn
+            };
+            setTokenData(tokenInfo);
+            return tokenInfo;
 
-    //     } catch (error) {
-    //         setError(`Erro na autenticação: ${error.message}`);
-    //         return null;
-    //     }
-    // };
+        } catch (error) {
+            setError(`Erro na autenticação: ${error.message}`);
+            return null;
+        }
+    };
 
     const fetchOrders = async () => {
         try {
-            // const tokenInfo = await getAccessToken();
-            // console.log(tokenInfo)
+             const tokenInfo = await getAccessToken();
+             console.log(tokenInfo)
             
-            // if (!tokenInfo?.accessToken) {
-            //     throw new Error('Autenticação falhou: Token não disponível');
-            // }
+             if (!tokenInfo?.accessToken) {
+                throw new Error('Autenticação falhou: Token não disponível');
+             }
 
             const initialUpdatedAt = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
             const finalUpdatedAt = new Date().toISOString();
