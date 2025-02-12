@@ -1,0 +1,13 @@
+
+.border-text {
+    -webkit-text-stroke: 1px #686868;
+    color: transparent; 
+    transition: 0.5s;
+  }
+  
+  
+.border-text:hover {
+    -webkit-text-stroke: 1px #8A4DD0;
+    color: #8A4DD0;
+    transition: 0.5s;
+  }
