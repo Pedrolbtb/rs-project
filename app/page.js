@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import logo from "../app/assets/logo.png";
 import PoligonalElements from "./components/poligonalElements";
 import "./styles/style.css";
 import { useRouter } from 'next/navigation';  // Use a nova API de navegação
@@ -14,16 +15,27 @@ export default function Home() {
     const router = useRouter();  // Hook do novo sistema de navegação
 
     
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+        // Envia o email e a senha para a API
         const response = await axios.post('/api/login', { email, senha });
-        router.push('/dashboard');
-    } catch (error) {
+    
+        // Verifica se a resposta contém o ID do usuário
+        if (response.data && response.data._id) {
+          const userId = response.data._id;
+    
+          // Redireciona para a dashboard com o ID na URL
+          router.push(`/dashboard/${userId}`);
+        } else {
+          setStatus("Erro ao fazer login. Verifique suas credenciais.");
+        }
+      } catch (error) {
         console.error("Erro na requisição:", error);
-        setStatus("Erro ao criar conta, tente novamente.");
-    }
-  };
+        setStatus("Erro ao fazer login, tente novamente.");
+      }
+    };
+    
 
 
   return (
@@ -43,6 +55,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="mb-60">
+            <Image src={logo} className="m-auto mb-0 ms-52" alt="Logo" width={300} />
             <form onSubmit={handleSubmit}>
             <div className="bg-white w-[35rem] h-[20rem] border border-primary p-10 rounded-[40] shadow-2xl justify-center items-center ms-20">
               <div>

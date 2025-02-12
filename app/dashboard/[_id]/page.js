@@ -1,10 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 
 export default function OrdersComponent() {
     const [orders, setOrders] = useState([]);
     const [error, setError] = useState(null);
-
+    const params = useParams();  // Correção: renomeando a variável para evitar conflito
+    
     // Função para obter o token de acesso
     const getAccessToken = async () => {
         try {
@@ -14,8 +16,6 @@ export default function OrdersComponent() {
             // Codifica clientId e clientSecret em Base64
             const basicAuth = btoa(`${clientId}:${clientSecret}`);
 
-            console.log("Enviando requisição para obter o token...");
-
             const response = await fetch('https://integration.plataformaserv.com.br/v1/oauth/token', {
                 method: 'POST',
                 headers: {
@@ -23,28 +23,18 @@ export default function OrdersComponent() {
                     'Authorization': `Basic ${basicAuth}`,
                 },
                 body: JSON.stringify({
-                    grantType: 'client_credentials', // Campo "grantType" conforme a documentação
+                    grantType: 'client_credentials',
                 }),
             });
 
-            console.log("Resposta da API de token:", response);
-
             if (!response.ok) {
                 const errorResponse = await response.json();
-                console.error("Erro na resposta da API de token:", errorResponse);
-                throw new Error(`Erro ao obter o token de acesso: ${response.statusText}`);
+                throw new Error(`Erro ao obter o token de acesso: ${errorResponse.message}`);
             }
 
             const data = await response.json();
-            console.log("Dados da resposta da API de token:", data);
-
-            if (!data.accessToken) {
-                throw new Error('Token de acesso não encontrado na resposta da API');
-            }
-
-            return data.accessToken; // Retorna o token de acesso
+            return data.accessToken;
         } catch (error) {
-            console.error('Erro ao obter o token de acesso:', error);
             setError(`Erro ao obter o token: ${error.message}`);
             return null;
         }
@@ -59,9 +49,8 @@ export default function OrdersComponent() {
                 throw new Error('Token de acesso não disponível');
             }
 
-            // Define as datas de atualização
-            const initialUpdatedAt = '2025-10-01T00:00:00Z'; // Exemplo de data inicial
-            const finalUpdatedAt = '2025-10-01T06:00:00Z'; // Exemplo de data final
+            const initialUpdatedAt = '2025-10-01T00:00:00Z';
+            const finalUpdatedAt = '2025-10-01T06:00:00Z';
 
             const response = await fetch(
                 `https://integration.plataformaserv.com.br/v1/orders?initialUpdatedAt=${initialUpdatedAt}&finalUpdatedAt=${finalUpdatedAt}`,
@@ -77,15 +66,12 @@ export default function OrdersComponent() {
             }
 
             const data = await response.json();
-            console.log("Dados da API de pedidos:", data);
             setOrders(data);
         } catch (err) {
-            console.error("Erro ao buscar pedidos:", err);
             setError(`Erro ao buscar pedidos: ${err.message}`);
         }
     };
 
-    // useEffect para chamar fetchOrders quando o componente é montado
     useEffect(() => {
         fetchOrders();
     }, []);

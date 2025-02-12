@@ -1,7 +1,6 @@
 import connectDB from '@/lib/db';
 import User from '@/models/user';
 import bcrypt from 'bcrypt';
-import axios from 'axios';
 import { NextResponse } from 'next/server';
 
 export async function POST(request) {
@@ -10,21 +9,27 @@ export async function POST(request) {
 
         const { email, senha } = await request.json();
 
-        // Verifica se o usuário já existe
+        // Verifica se o usuário existe
         const userExistence = await User.findOne({ email });
         if (!userExistence) {
-            return NextResponse.json({ error: "Usuário não existe" });
+            return NextResponse.json({ error: "Usuário não existe" }, { status: 404 });
         }
 
-        // Cria um novo usuário
+        // Verifica se a senha está correta
         const checkPassword = await bcrypt.compare(senha, userExistence.senha);
-
         if (!checkPassword) {
-            return NextResponse.json({ error: "Senha incorreta" }, { status: 404 });
+            return NextResponse.json({ error: "Senha incorreta" }, { status: 401 });
         }
 
-        return NextResponse.json({ message: "Login feito com sucesso" }, { status: 201 });
+        // Retorna sucesso e o ID do usuário
+        return NextResponse.json({ 
+            success: true, 
+            message: "Login feito com sucesso", 
+            _id: userExistence._id.toString()  // Converte o ID para string
+        }, { status: 200 });
+
     } catch (err) {
+        console.error("Erro no servidor:", err);
         return NextResponse.json({ error: "Erro no servidor" }, { status: 500 });
     }
 }
