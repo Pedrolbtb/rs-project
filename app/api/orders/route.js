@@ -12,7 +12,7 @@ export async function GET(request) {
   
       // Buscar pedidos
       const ordersResponse = await fetch(
-        `https://integration.plataformaserv.com.br/v1/orders?initialUpdatedAt=${initialUpdatedAt}&finalUpdatedAt=${finalUpdatedAt}`,
+        `https://integration.plataformaseru.com.br/v1/orders?initialUpdatedAt=${initialUpdatedAt}&finalUpdatedAt=${finalUpdatedAt}`,
         { headers: { Authorization: `${token_type} ${access_token}` } }
       );
   

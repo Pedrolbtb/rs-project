@@ -14,10 +14,11 @@ export default function OrdersComponent() {
             const response = await axios.post('/api/getToken');
             
             const data = response.data;
+            console.log('error', data)
             const tokenInfo = {
-                accessToken: data.access_token,
-                tokenType: data.token_type || 'Bearer',
-                expiresIn: data.expires_in
+                accessToken: data.accessToken,
+                tokenType: data.tokenType || 'Bearer',
+                expiresIn: data.expiresIn
             };
             setTokenData(tokenInfo);
             return tokenInfo;
@@ -30,27 +31,27 @@ export default function OrdersComponent() {
 
     const fetchOrders = async () => {
         try {
-            // const tokenInfo = await getAccessToken();
-            // console.log(tokenInfo)
+            const tokenInfo = await getAccessToken();
+            console.log(tokenInfo)
             
-            // if (!tokenInfo?.accessToken) {
-            //     throw new Error('Autenticação falhou: Token não disponível');
-            // }
+            if (!tokenInfo?.accessToken) {
+                throw new Error('Autenticação falhou: Token não disponível');
+            }
 
-            // const initialUpdatedAt = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-            // const finalUpdatedAt = new Date().toISOString();
+            const initialUpdatedAt = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+            const finalUpdatedAt = new Date().toISOString();
 
-            // const response = await fetch(
-            //     `/api/orders?initialUpdatedAt=${initialUpdatedAt}&finalUpdatedAt=${finalUpdatedAt}`
-            // );
+            const response = await fetch(
+                `/api/orders?initialUpdatedAt=${initialUpdatedAt}&finalUpdatedAt=${finalUpdatedAt}`
+            );
 
-            // if (!response.ok) {
-            //     const errorData = await response.json();
-            //     throw new Error(errorData.error || 'Erro ao buscar pedidos');
-            // }
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Erro ao buscar pedidos');
+            }
 
-            // const data = await response.json();
-            // setOrders(data);
+            const data = await response.json();
+            setOrders(data);
 
         } catch (err) {
             setError(`Erro ao buscar pedidos: ${err.message}`);

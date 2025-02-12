@@ -1,4 +1,3 @@
-import { errorToJSON } from "next/dist/server/render";
 
 export async function POST() {
     try {
@@ -8,19 +7,18 @@ export async function POST() {
   
       const basicAuth = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
   
-      const response = await fetch('https://integration.plataformaserv.com.br/v1/oauth/token', {
+      const response = await fetch('https://integration.plataformaseru.com.br/v1/oauth/token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           'Authorization': `Basic ${basicAuth}`,
         },
-        body: new URLSearchParams({ grant_type: 'client_credentials' }),
+        body: new URLSearchParams({ grantType: 'client_credentials' }),
       });
   
       if (!response.ok) {
         const errorText = await response.text();
-        const errorJason = await response.json();
-        console.log(errorJason)
+        console.log('qualquer coisa', errorText)
         throw new Error(`Erro no servidor: ${response.status} - ${errorText}`);
       }
   
@@ -28,7 +26,7 @@ export async function POST() {
       return new Response(JSON.stringify(data), { status: 200 });
   
     } catch (error) {
-        console.log(error.response)
+        console.log('error', error)
       return new Response(JSON.stringify({ error: error.message }), { status: 500 });
 
     }
